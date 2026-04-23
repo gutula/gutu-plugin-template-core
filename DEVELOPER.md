@@ -54,6 +54,11 @@ Maintains reusable templates for content, messaging, and workflow-centric genera
 | Field | Value |
 | --- | --- |
 | Depends On | `auth-core`, `org-tenant-core`, `role-policy-core`, `audit-core` |
+| Recommended Plugins | None |
+| Capability Enhancing | None |
+| Integration Only | None |
+| Suggested Packs | None |
+| Standalone Supported | Yes |
 | Requested Capabilities | `ui.register.admin`, `api.rest.mount`, `data.write.template` |
 | Provides Capabilities | `template.records` |
 | Owns Data | `template.records` |
