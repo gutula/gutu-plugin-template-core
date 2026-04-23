@@ -5,6 +5,12 @@ export default definePackage({
   kind: "app",
   version: "0.1.0",
   displayName: "Template Core",
+  defaultCategory: {
+    id: "content_experience",
+    label: "Content & Experience",
+    subcategoryId: "templates",
+    subcategoryLabel: "Templates"
+  },
   description: "Reusable templates for content, messages, and workflows.",
   extends: [],
   dependsOn: ["auth-core","org-tenant-core","role-policy-core","audit-core"],
