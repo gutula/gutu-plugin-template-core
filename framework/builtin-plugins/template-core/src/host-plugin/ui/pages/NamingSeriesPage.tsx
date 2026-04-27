@@ -22,6 +22,7 @@ import {
 import { PageHeader } from "@/admin-primitives/PageHeader";
 import { Card, CardContent } from "@/admin-primitives/Card";
 import { EmptyState } from "@/admin-primitives/EmptyState";
+import { useMergedUiResources } from "@/runtime/useUiMetadata";
 import { Button } from "@/primitives/Button";
 import { Input } from "@/primitives/Input";
 import { Label } from "@/primitives/Label";
@@ -79,11 +80,22 @@ function ResourceRail({
   active: string;
   onPick: (id: string) => void;
 }) {
+  const merged = useMergedUiResources<ResourceDescriptor>(
+    RESOURCES,
+    (r) => ({
+      id: r.id,
+      label: r.label ?? r.id,
+      category: r.group ?? "Other",
+    }),
+    {
+      sortKey: (r) => `${r.category}|${r.label.toLowerCase()}|${r.id}`,
+    },
+  );
   const [search, setSearch] = React.useState("");
   const filtered = React.useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return RESOURCES;
-    return RESOURCES.filter(
+    if (!q) return merged;
+    return merged.filter(
       (r) =>
         r.id.toLowerCase().includes(q) ||
         r.label.toLowerCase().includes(q) ||

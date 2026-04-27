@@ -23,6 +23,7 @@ import {
 import { PageHeader } from "@/admin-primitives/PageHeader";
 import { Card, CardContent } from "@/admin-primitives/Card";
 import { EmptyState } from "@/admin-primitives/EmptyState";
+import { useMergedUiResources } from "@/runtime/useUiMetadata";
 import { Button } from "@/primitives/Button";
 import { Input } from "@/primitives/Input";
 import { Label } from "@/primitives/Label";
@@ -110,6 +111,7 @@ const SAMPLE_RECORD = {
   terms: "Net 30 days. Late fee 1.5% per month.",
 };
 
+type ResourceRow = { id: string; label: string; category: string };
 function ResourceRail({
   active,
   onPick,
@@ -117,21 +119,26 @@ function ResourceRail({
   active: string;
   onPick: (id: string) => void;
 }) {
+  const merged = useMergedUiResources<ResourceRow>(
+    RESOURCES,
+    (r) => ({ id: r.id, label: r.label ?? r.id, category: r.group ?? "Other" }),
+    { sortKey: (r) => `${r.category}|${r.label.toLowerCase()}|${r.id}` },
+  );
   const [search, setSearch] = React.useState("");
   const filtered = React.useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return RESOURCES;
-    return RESOURCES.filter(
+    if (!q) return merged;
+    return merged.filter(
       (r) =>
         r.id.toLowerCase().includes(q) ||
         r.label.toLowerCase().includes(q) ||
         r.category.toLowerCase().includes(q),
     );
-  }, [search]);
-  const byCat = new Map<string, typeof RESOURCES>();
+  }, [merged, search]);
+  const byCat = new Map<string, ResourceRow[]>();
   for (const r of filtered) {
-    const list = (byCat.get(r.category) ?? []) as typeof RESOURCES;
-    byCat.set(r.category, [...list, r] as typeof RESOURCES);
+    const list = byCat.get(r.category) ?? [];
+    byCat.set(r.category, [...list, r]);
   }
   return (
     <aside className="flex flex-col gap-2 min-h-0">
