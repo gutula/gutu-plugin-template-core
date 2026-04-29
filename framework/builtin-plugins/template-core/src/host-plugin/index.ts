@@ -17,6 +17,9 @@ export const hostPlugin: HostPlugin = {
     { mountPath: "/print-formats", router: printFormatRoutes },
     { mountPath: "/print", router: printPdfRoutes }
   ],
+  resources: [
+    "template.template",
+  ],
 };
 
 // Re-export the lib API so other plugins can `import` from
